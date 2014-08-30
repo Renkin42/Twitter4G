@@ -1,0 +1,12 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.twitter4j:twitter4j-core:4.0.2'
+		compile gradleAPI()
+	}
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'java'
