@@ -1,9 +1,10 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-apply plugin: 'java'
+apply plugin: 'groovy'
 
 dependencies {
 	compile gradleApi()
+	compile localGroovy()
 }
 
 apply plugin: 'maven'
@@ -28,21 +29,21 @@ project.ext {
 
 sourceSets {
 	filtered {
-		java {
+		groovy {
 			srcDirs = [filteredSourceDir]
 		}
 	}
 }
 
-compileJava.source = sourceSets.filtered.java
+compileGroovy.source = sourceSets.filtered.java
 
 task addKeys (type: Copy) {
-	from sourceSets.main.java
+	from sourceSets.main.groovy
 	into filteredSourceDir
 	filter(ReplaceTokens, tokens: [CONSUMERKEY: project.consumerkey, CONSUMERSECRET: project.consumersecret])
 }
 
-compileJava.dependsOn addKeys
+compileGroovy.dependsOn addKeys
 
 uploadArchives {
 	repositories {
