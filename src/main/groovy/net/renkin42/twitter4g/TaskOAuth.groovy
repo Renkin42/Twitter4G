@@ -14,17 +14,19 @@ import twitter4j.auth.RequestToken
 
 class TaskOAuth extends DefaultTask {
 	
-	Twitter twitter = TwitterFactory.getSingleton()	
+	static Twitter twitter
 	
 	@TaskAction
 	def oAuth() {
 		RequestToken requestToken
 		AccessToken token
 		
+		twitter = TwitterFactory.getSingleton()	
 		twitter.setOAuthConsumer("@CONSUMERKEY@", "@CONSUMERSECRET@")
 		
 		try {
 			token = new AccessToken("${project.twitter.accessToken}", "${project.twitter.accessTokenSecret}")
+			println "Tokens have been set."
 		} catch (Exception exc) {
 			println "Tokens not set. Proceeding to Pin-based Authorization"
 			
@@ -61,8 +63,10 @@ class TaskOAuth extends DefaultTask {
 			}
 
 			println "Please copy these keys and set them in your build.gradle file"
-			println "Access Token: ${token.getAccessToken()}"
+			println "Access Token: ${token.getToken()}"
 			println "Access Token Secret: ${token.getTokenSecret()}"
 		}
+		
+		twitter.setOAuthAccessToken(token)
 	}
 }

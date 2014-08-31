@@ -35,7 +35,7 @@ sourceSets {
 	}
 }
 
-compileGroovy.source = sourceSets.filtered.java
+compileGroovy.source = sourceSets.filtered.groovy
 
 task addKeys (type: Copy) {
 	from sourceSets.main.groovy
