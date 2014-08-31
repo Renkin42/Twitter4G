@@ -17,3 +17,28 @@ dependencies {
 version = "1.0"
 group = "net.renkin42.twitter4g"
 archivesBaseName = "Twitter4G"
+
+project.ext {
+	filteredSourceDir = file("${buildDir}/filtered")
+	consumerkey = consumer_key
+	consumersecret = consumer_secret
+}
+
+sourceSets {
+	filtered {
+		java {
+			srcDirs = [filteredSourceDir]
+		}
+	}
+}
+
+compileJava.source = sourceSets.filtered.java
+
+task addKeys (type: Copy) {
+	from sourceSets.main.java
+	into filteredSourceDir
+	expand(consumerkey:project.consumerkey)
+	expand(consumersecret:project.consumersecret)
+}
+
+compileJava.dependsOn addKeys
