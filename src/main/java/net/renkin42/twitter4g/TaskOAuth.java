@@ -1,10 +1,8 @@
 package net.renkin42.twitter4g;
 
 import java.awt.Desktop;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.Scanner;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
@@ -34,29 +32,23 @@ public class TaskOAuth extends DefaultTask {
 			try {
 				requestToken = twitter.getOAuthRequestToken();
 			} catch (TwitterException e) {
-				System.out.println("Check consumer and consumer secret keyes.");
+				System.out.println("Check consumer and consumer secret keys.");
 				e.printStackTrace();
 			}
 
 			System.out.println("Launching browser..."); 
 			try { 
 				Desktop desktop = Desktop.getDesktop(); 
-				desktop.browse(new URI(requestToken.getAuthorizationURL())); 
+				desktop.browse(new URI(requestToken.getAuthorizationURL()));
 			} catch (Exception e) { 
 				System.out.println("Problem in launching browser. Type the following URL into a browser:"); 
 				System.out.println(requestToken.getAuthorizationURL()); 
 			}
 
 			System.out.print("Please enter the PIN from Twitter: "); 
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); 
-			String pin = null; 
-
-			try { 
-				pin = br.readLine(); 
-			} catch (IOException e) { 
-				System.out.println("I guess you don't want to?"); 
-				e.printStackTrace(); System.exit(-1);
-			}
+			Scanner keyboard = new Scanner(System.in); 
+			String pin = keyboard.next();
+			keyboard.close();
 
 			try { 
 				token = twitter.getOAuthAccessToken(requestToken, pin); 
@@ -66,7 +58,7 @@ public class TaskOAuth extends DefaultTask {
 				System.exit(-1); 
 			}
 
-			System.out.println("Please copy these keyes and set them in your build.gradle file");
+			System.out.println("Please copy these keys and set them in your build.gradle file");
 			System.out.println("Access Token: " + token.getToken());
 			System.out.println("Access Token Secret: " + token.getTokenSecret());
 		}

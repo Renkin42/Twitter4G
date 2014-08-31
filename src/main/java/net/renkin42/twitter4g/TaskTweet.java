@@ -10,7 +10,6 @@ public class TaskTweet extends DefaultTask {
 	
 	@TaskAction
 	public void tweet() {
-		this.dependsOn("oAuth");
 		try {
 			Status status = TaskOAuth.twitter.updateStatus(Twitter4GPlugin.message);
 			System.out.println("Status successfully updated to [" + status.getText() + "]");

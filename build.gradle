@@ -43,3 +43,11 @@ task addKeys (type: Copy) {
 }
 
 compileJava.dependsOn addKeys
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			repository(url: uri('../repo'))
+		}
+	}
+}

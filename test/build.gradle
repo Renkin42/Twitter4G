@@ -1,0 +1,23 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		maven {
+			name = "local"
+			url = uri("../../repo")
+		}
+	}
+	
+	dependencies {
+		classpath "net.renkin42.twitter4g:Twitter4G:1.0"
+	}
+}
+
+apply plugin: 'twitter4g'
+
+version = "1.0"
+
+twitter {
+	message = "This is a Twitter4G test. Test version $project.version #Gradle"
+	accessToken = access_token
+	accessTokenSecret = access_secret
+}
