@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 apply plugin: 'java'
 
 dependencies {
@@ -37,8 +39,7 @@ compileJava.source = sourceSets.filtered.java
 task addKeys (type: Copy) {
 	from sourceSets.main.java
 	into filteredSourceDir
-	expand(consumerkey:project.consumerkey)
-	expand(consumersecret:project.consumersecret)
+	filter(ReplaceTokens, tokens: [CONSUMERKEY: project.consumerkey, CONSUMERSECRET: project.consumersecret])
 }
 
 compileJava.dependsOn addKeys

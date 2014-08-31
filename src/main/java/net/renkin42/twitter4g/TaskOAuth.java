@@ -25,7 +25,7 @@ public class TaskOAuth extends DefaultTask {
 		AccessToken token = null;
 		
 		twitter = TwitterFactory.getSingleton();
-		twitter.setOAuthConsumer("${consumerkey}", "${consumersecret}");
+		twitter.setOAuthConsumer("@CONSUMERKEY@", "@CONSUMERSECRET@");
 		
 		try {
 			token = new AccessToken(Twitter4GPlugin.accessToken, Twitter4GPlugin.accessTokenSecret);
