@@ -14,10 +14,10 @@ buildscript {
 
 apply plugin: 'twitter4g'
 
-version = "1.0"
+version = "2.22"
 
 twitter {
-	message = "This is another Twitter4G test. Test version $project.version #Gradle"
+	message = "The tests just go on and on... Test version $project.version You Can (Not) #Gradle"
 	accessToken = access_token
 	accessTokenSecret = access_secret
 }
