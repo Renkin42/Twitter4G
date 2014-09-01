@@ -24,10 +24,10 @@ class TaskOAuth extends DefaultTask {
 		twitter = TwitterFactory.getSingleton()	
 		twitter.setOAuthConsumer("@CONSUMERKEY@", "@CONSUMERSECRET@")
 		
-		try {
+		if (project.hasProperty("project.twitter.accessToken") && project.hasProperty("project.twitter.accessTokenSecret")) {
 			token = new AccessToken("${project.twitter.accessToken}", "${project.twitter.accessTokenSecret}")
 			println "Tokens have been set."
-		} catch (Exception exc) {
+		} else {
 			println "Tokens not set. Proceeding to Pin-based Authorization"
 			
 			try {

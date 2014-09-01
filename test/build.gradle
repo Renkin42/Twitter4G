@@ -17,7 +17,7 @@ apply plugin: 'twitter4g'
 version = "1.0"
 
 twitter {
-	message = "This is a Twitter4G test. Test version $project.version #Gradle"
+	message = "This is another Twitter4G test. Test version $project.version #Gradle"
 	accessToken = access_token
 	accessTokenSecret = access_secret
 }
