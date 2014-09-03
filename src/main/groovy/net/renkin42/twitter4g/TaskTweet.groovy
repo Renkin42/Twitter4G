@@ -6,6 +6,7 @@ import twitter4j.Status
 import twitter4j.Twitter
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken
+import twitter4j.conf.ConfigurationBuilder
 
 class TaskTweet extends DefaultTask {
 	
@@ -15,11 +16,13 @@ class TaskTweet extends DefaultTask {
 	 * Also declares dependency on oAuth task.
 	 */
 	public TaskTweet() {
-		this.dependsOn("oAuth")
 		outputs.upToDateWhen {
 			Twitter twitter = this.authorize()
 			String latest = twitter.getUserTimeline().get(0).getText()
 			return latest == project.twitter.message
+		}
+		if (project.twitter.message == null) {
+			project.twitter.message = "Project ${project.archivesBaseName} version ${project.version} built successfully! #Gradle #Twitter4G"
 		}
 	}
 	
@@ -46,9 +49,15 @@ class TaskTweet extends DefaultTask {
 	 */
 	public Twitter authorize() {
 		
-		Twitter twitter = TwitterFactory.getSingleton()
-		twitter.setOAuthConsumer(project.twitter.consumerKey, project.twitter.consumerKeySecret)
-		twitter.setOAuthAccessToken(new AccessToken(project.twitter.accessToken, project.twitter.accessTokenSecret))
+		ConfigurationBuilder conf = new ConfigurationBuilder()
+		conf.setOAuthConsumerKey(project.twitter.consumerKey)
+		conf.setOAuthConsumerSecret(project.twitter.consumerKeySecret)
+		conf.setOAuthAccessToken(project.twitter.accessToken)
+		conf.setOAuthAccessTokenSecret(project.twitter.accessTokenSecret)
+		
+		TwitterFactory factory = new TwitterFactory(conf.build())
+		Twitter twitter = factory.getInstance()
+		
 		return twitter
 		
 	}

@@ -16,8 +16,8 @@ class Twitter4GPlugin implements Plugin<Project> {
 		
 		//Add tasks
 		target.getTasks().create("oAuth", TaskOAuth)
-		target.getTasks().create("genKeys", TaskGenKeyFile)
-		target.getTasks().create("tweet", TaskTweet)
+		target.getTasks().create("genKeys", TaskGenKeyFile).dependsOn("oAuth")
+		target.getTasks().create("tweet", TaskTweet).dependsOn("oAuth")
 		
 	}
 
