@@ -13,60 +13,60 @@ import twitter4j.auth.AccessToken
 import twitter4j.auth.RequestToken
 
 class TaskOAuth extends DefaultTask {
-	
-	static Twitter twitter
-	
+
+	public TaskOAuth() {
+		outputs.upToDateWhen {
+			return project.twitter.accessToken != null && project.twitter.accessTokenSecret != null
+		}
+	}
+
 	@TaskAction
 	def oAuth() {
 		RequestToken requestToken
 		AccessToken token
-		
-		twitter = TwitterFactory.getSingleton()	
-		twitter.setOAuthConsumer("@CONSUMERKEY@", "@CONSUMERSECRET@")
-		
+
+		Twitter twitter = TwitterFactory.getSingleton()
+		twitter.setOAuthConsumer(project.twitter.consumerKey, project.twitter.consumerKeySecret)
+
+		logger.quiet("Tokens not set. Proceeding to Pin-based Authorization")
+
 		try {
-			token = new AccessToken(project.twitter.accessToken, project.twitter.accessTokenSecret)
-			println "Tokens have been set."
-		} catch (Exception exc) {
-			println "Tokens not set. Proceeding to Pin-based Authorization"
-			
-			try {
-				requestToken = twitter.getOAuthRequestToken()
-			} catch (TwitterException e) {
-				println "Check consumer and consumer secret keys."
-				e.printStackTrace()
-			}
-
-			println "Launching browser..."
-			try {
-				Desktop desktop = Desktop.getDesktop()
-				desktop.browse(new URI(requestToken.getAuthorizationURL()))
-			} catch (Exception e) {
-				println "Problem in launching browser. Type the following URL into a browser:"
-				println requestToken.getAuthorizationURL()
-			}
-
-			def pin
-			def console = System.console()
-			if (console) {
-				pin = console.readLine("> Please enter the pin from Twitter: ")
-			} else {
-				logger.error("Cannot get console.")
-			}
-
-			try {
-				token = twitter.getOAuthAccessToken(requestToken, pin);
-			} catch (TwitterException e) {
-				println "Was there a typo in the PIN you entered?"
-				e.printStackTrace();
-				System.exit(-1);
-			}
-
-			println "Please copy these keys and set them in your build.gradle file"
-			println "Access Token: ${token.getToken()}"
-			println "Access Token Secret: ${token.getTokenSecret()}"
+			requestToken = twitter.getOAuthRequestToken()
+		} catch (TwitterException e) {
+			logger.error("Check consumer and consumer secret keys.")
+			e.printStackTrace()
 		}
+
+		logger.quiet "Launching browser..."
+		try {
+			Desktop desktop = Desktop.getDesktop()
+			desktop.browse(new URI(requestToken.getAuthorizationURL()))
+		} catch (Exception e) {
+			logger.quiet("Problem in launching browser. Type the following URL into a browser:")
+			logger.quiet(requestToken.getAuthorizationURL())
+		}
+
+		def pin
+		def console = System.console()
+		if (console) {
+			pin = console.readLine("Please enter the pin from Twitter: ")
+		} else {
+			logger.error("Cannot get console.")
+		}
+
+		try {
+			token = twitter.getOAuthAccessToken(requestToken, pin);
+		} catch (TwitterException e) {
+			logger.error("Was there a typo in the PIN you entered?")
+			e.printStackTrace();
+			System.exit(-1);
+		}
+
+		logger.quiet("Please copy these keys and set them in your build.gradle file")
+		logger.quiet("Access Token: ${token.getToken()}")
+		logger.quiet("Access Token Secret: ${token.getTokenSecret()}")
 		
-		twitter.setOAuthAccessToken(token)
+		project.twitter.accessToken = token.getToken()
+		project.twitter.accessTokenSecret = token.getTokenSecret()
 	}
 }

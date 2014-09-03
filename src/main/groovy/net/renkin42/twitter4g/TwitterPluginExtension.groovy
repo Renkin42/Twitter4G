@@ -2,8 +2,11 @@ package net.renkin42.twitter4g
 
 class TwitterPluginExtension {
 	
-	String message
+	def String message = "Project ${project.archivesBaseName} version ${project.version} built successfully! #Gradle #Twitter4G"
+	
 	String accessToken
 	String accessTokenSecret
-
+	
+	def String consumerKey = "@CONSUMERKEY@"
+	def String consumerKeySecret = "@CONSUMERSECRET@"
 }

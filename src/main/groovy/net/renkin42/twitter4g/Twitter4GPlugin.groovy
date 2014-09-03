@@ -8,10 +8,16 @@ class Twitter4GPlugin implements Plugin<Project> {
 	
 	@Override
 	public void apply(Project target) {
+		//Apply base plugin to auto-add clean tasks
+		target.apply(plugin: 'base')
+		
+		//Add twitter configuration block
 		target.extensions.create("twitter", TwitterPluginExtension)
+		
+		//Add tasks
 		target.getTasks().create("oAuth", TaskOAuth)
-		Task tweet = target.getTasks().create("tweet", TaskTweet)
-		tweet.dependsOn("oAuth")
+		target.getTasks().create("genKeys", TaskGenKeyFile)
+		target.getTasks().create("tweet", TaskTweet)
 		
 	}
 
