@@ -17,6 +17,9 @@ dependencies {
 	compile 'org.twitter4j:twitter4j-core:4.0.2'
 }
 
+apply plugin: 'eclipse'
+apply plugin: 'wrapper'
+
 version = "1.0"
 group = "net.renkin42.twitter4g"
 archivesBaseName = "Twitter4G"
@@ -40,7 +43,7 @@ compileGroovy.source = sourceSets.filtered.groovy
 task addKeys (type: Copy) {
 	from sourceSets.main.groovy
 	into filteredSourceDir
-	filter(ReplaceTokens, tokens: [CONSUMERKEY: project.consumerkey, CONSUMERSECRET: project.consumersecret])
+	filter(ReplaceTokens, tokens: [CONSUMERKEY: project.consumerkey, CONSUMERSECRET: project.consumersecret, VERSION: project.version])
 }
 
 compileGroovy.dependsOn addKeys
