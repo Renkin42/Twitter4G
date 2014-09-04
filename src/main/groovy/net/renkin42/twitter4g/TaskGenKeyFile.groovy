@@ -10,11 +10,23 @@ import twitter4j.Twitter
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
 
+/**
+ * Custom Gradle task to generate a plain-text file containing the user's oAuth keys.
+ * @author Renkin42
+ */
 class TaskGenKeyFile extends DefaultTask {
 	
+	/**
+	 * Generated files are placed in an 'oAuth' folder in the build directory
+	 */
 	@OutputDirectory
 	File keyDir = new File("${project.buildDir}\\oAuth\\")
 	
+	/**
+	 * Generates a file containing the user's oAuth Access Tokens.
+	 * These may be set by the user or by the oAuth task.
+	 * Generated files are named 'yourtwittername.txt'
+	 */
 	@TaskAction
 	def genKeyFile() {
 		

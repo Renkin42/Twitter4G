@@ -8,12 +8,19 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken
 import twitter4j.conf.ConfigurationBuilder
 
+/**
+ * Custom Gradle task to send tweets using the project-configured authorization tokens.
+ * Will generate a pre-configured message if none is supplied by the user.
+ * Is skipped if the message is a duplicate.
+ * 
+ * @author Renkin42
+ */
 class TaskTweet extends DefaultTask {
 	
 	/**
 	 * Checks if the most recent tweet on the user's timeline is the same as the project-configured message.
 	 * Task is skipped is this returns true.
-	 * Also declares dependency on oAuth task.
+	 * Sets default message if currently null.
 	 */
 	public TaskTweet() {
 		outputs.upToDateWhen {

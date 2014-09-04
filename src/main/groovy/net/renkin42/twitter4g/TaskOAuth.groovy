@@ -12,14 +12,30 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken
 import twitter4j.auth.RequestToken
 
+/**
+ * Custom Gradle Task to check for project-configured oAuth Access Tokens.
+ * Will be skipped if tokens are found.
+ * Otherwise proceeds to pin-based authentication.
+ * 
+ * @author Renkin42
+ */
 class TaskOAuth extends DefaultTask {
 
+	/**
+	 * Checks if access tokens have been set.
+	 * If so, the task will be skipped.
+	 */
 	public TaskOAuth() {
 		outputs.upToDateWhen {
 			return project.twitter.accessToken != null && project.twitter.accessTokenSecret != null
 		}
 	}
 
+	/**
+	 * Performs pin-based authorization and sets access tokens for this build.
+	 * Attempts to launch a browser, otherwise prints url to the console.
+	 * Prints access tokens to the console. 
+	 */
 	@TaskAction
 	def oAuth() {
 		RequestToken requestToken
