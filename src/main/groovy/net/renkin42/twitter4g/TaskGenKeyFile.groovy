@@ -38,7 +38,14 @@ class TaskGenKeyFile extends DefaultTask {
 		
 		TwitterFactory factory = new TwitterFactory(conf.build())
 		Twitter twitter = factory.getInstance()
-		String name = twitter.getScreenName()
+		String name;
+		
+		try{
+			name = twitter.getScreenName()
+		} catch (Exception e) {
+			logger.error("This does not appear to be a valid user. Generating generic key file.")
+			name = "user"
+		}
 		
 		def keyFile = new File(keyDir, "${name}.txt")
 		keyFile.withPrintWriter { writer ->
